@@ -29,6 +29,13 @@ else ifeq ($(TARGET),BLUE_PILL)
 	DEFS     = -DUSE_SYS3 -DFREE_STANDING -DBLUE_PILL
 	LDSCRIPT = stm32f103.ld
 	BOARD    = $(CHOPSTX)/board/board-blue-pill.h
+else ifeq ($(TARGET),BLACK_PILL)
+	MCU      = cortex-m3
+	CHIP     = stm32f103
+	DRIVERS  = uvoid.c
+	DEFS     = -DUSE_SYS3 -DFREE_STANDING -DBLACK_PILL
+	LDSCRIPT = stm32f103.ld
+	BOARD    = $(CHOPSTX)/board/board-black-pill.h
 else ifeq ($(TARGET),TOMU)
 	MCU      = cortex-m0plus
 	CHIP     = efm32hg
@@ -39,9 +46,13 @@ else ifeq ($(TARGET),TOMU)
 	BOARD    = $(CHOPSTX)/board/board-tomu.h
 endif
 
+ifeq ($(ENFORCE_DEBUG_LOCK),1)
+DEFS += -DENFORCE_DEBUG_LOCK
+endif
+
 CSRC = u2f.c usb-hid.c dbug.c u2f-hid.c u2f-apdu.c \
 	sha256.c neug.c random.c ec_p256r1.c bn.c jpc_p256r1.c \
-	call-ec_p256r1.c modp256r1.c mod.c hmac.c $(DRIVERS)
+	call-ec_p256r1.c modp256r1.c mod.c hmac.c platform.c $(DRIVERS)
 
 USE_SYS = yes
 USE_USB = yes

@@ -1,4 +1,4 @@
-import sys
+from __future__ import print_function
 from asn1crypto.keys import ECPrivateKey
 
 def pk_to_c_array(name, pk_der):
@@ -9,9 +9,7 @@ def pk_to_c_array(name, pk_der):
     pk_native = pk['private_key'].native
 
     # translate to hex string
-    pk_hex = format(pk_native, 'x')
-    # pad with zeros to 32 bytes
-    pk_hex = ("0" * (64 - len(pk_hex))) + pk_hex
+    pk_hex = format(pk_native, '064x')
 
     # split by pairs of characters
     hex_bytes = ["0x" + pk_hex[i:i + 2] for i in range(0, len(pk_hex), 2)]
@@ -34,5 +32,5 @@ def cert_to_c_array(name, der):
 with open("attestation.der", "rb") as f:
     print(cert_to_c_array("attestation_der", f.read()))
 
-with open("attestation_key.der", "r") as f:
-    sys.stdout.write(pk_to_c_array("attestation_key", f.read()))
+with open("attestation_key.der", "rb") as f:
+    print(pk_to_c_array("attestation_key", f.read()))
